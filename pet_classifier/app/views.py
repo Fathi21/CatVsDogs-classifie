@@ -5,9 +5,11 @@ from django.core.files.storage import default_storage
 from .predict import CatDogClassifier
 
 from .serializers import ImageUploadSerializer
+import os
 
+##os.chdir("Models")
 # Load the model
-model_path = './models/cat_dog_classifier.h5'  # Correct path to the model
+model_path = os.path.join(os.path.dirname(__file__), 'Model', 'cat_dog_classifier.h5')
 classifier = CatDogClassifier(model_path)
 
 class PredictImage(APIView):
