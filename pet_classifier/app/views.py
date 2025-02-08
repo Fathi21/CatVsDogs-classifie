@@ -2,12 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import default_storage
-from predict import CatDogClassifier
+from .predict import CatDogClassifier
 
 from .serializers import ImageUploadSerializer
 
 # Load the model
-model_path = 'Model/cat_dog_classifier.h5'
+model_path = './models/cat_dog_classifier.h5'  # Correct path to the model
 classifier = CatDogClassifier(model_path)
 
 class PredictImage(APIView):
