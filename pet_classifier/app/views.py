@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import default_storage
 from .predict import CatDogClassifier
-
 from .serializers import *
+from .models import UploadImage
 import os
 
 ##os.chdir("Models")
@@ -14,7 +14,7 @@ model_path = os.path.join(os.path.dirname(__file__), 'Model', 'cat_dog_classifie
 classifier = CatDogClassifier(model_path)
 
 @api_view(['POST'])
-def UploadImage(request):
+def UploadUpImage(request):
     # Validate the uploaded file
     serializer = ImageUploadSerializer(data=request.data)
     if not serializer.is_valid():
@@ -39,6 +39,20 @@ def UploadImage(request):
         # #finally:
         #     # Delete the uploaded image after prediction
         #     #default_storage.delete(file_name)
+
+@api_view(['GET'])
+def GetUploadImage(request):
+    
+    if request.method == 'GET':
+        # Get the data from the database.
+        data = UploadImage.objects.all()
+
+        # Serialize the data.
+        serializer = ImageUploadSerializer(data, many=True)
+
+        # Return the data.
+        return Response(serializer.data)
+
 
 @api_view(['POST'])
 def SavePrediction(request):
