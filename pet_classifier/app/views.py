@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import default_storage
 from .predict import CatDogClassifier
@@ -45,10 +44,10 @@ def GetUploadImage(request):
     
     if request.method == 'GET':
         # Get the data from the database.
-        data = UploadImage.objects.all()
+        images = UploadImage.objects.all()
 
         # Serialize the data.
-        serializer = ImageUploadSerializer(data, many=True)
+        serializer = ImageUploadSerializer(images, many=True)
 
         # Return the data.
         return Response(serializer.data)

@@ -2,7 +2,7 @@ from django.urls import path
 from . import views # Correct import path
 
 urlpatterns = [
-    path('uploadImage/', views.UploadUpImage, name='UploadUpImage'),
-    path('GetUploadImage/', views.GetUploadImage, name='GetUploadImage'),
-    path('SaveThePrediction/', views.SavePrediction, name='SaveThePrediction')
+    path('Api/uploadImage', views.UploadUpImage, name='uploadImage'),
+    path('Api/GetUploadImage', views.GetUploadImage, name='GetUploadImage'),
+    path('Api/SaveThePrediction', views.SavePrediction, name='SaveThePrediction'),
 ]
