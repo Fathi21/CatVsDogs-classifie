@@ -40,7 +40,7 @@ def UploadUpImage(request):
         #     #default_storage.delete(file_name)
 
 @api_view(['GET'])
-def GetUploadImage(request):
+def GetUploadedImages(request):
     
     if request.method == 'GET':
         # Get the data from the database.
@@ -52,6 +52,18 @@ def GetUploadImage(request):
         # Return the data.
         return Response(serializer.data)
 
+@api_view(['GET'])
+def GetUploadedImageById(request, pk):
+    
+    if request.method == 'GET':
+        # Get the data from the database.
+        images = UploadImage.objects.filter(id=pk)
+    
+        # Serialize the data.
+        serializer = ImageUploadSerializer(images, many=True)
+
+        # Return the data.
+        return Response(serializer.data)
 
 @api_view(['POST'])
 def SavePrediction(request):
