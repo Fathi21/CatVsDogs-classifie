@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+form{
+  margin-bottom: 15px;
+}
+
+.image-style {
+  object-fit: cover;
+  height: 200px;
+}
