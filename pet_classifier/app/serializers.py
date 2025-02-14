@@ -9,8 +9,10 @@ class ImageUploadSerializer(serializers.ModelSerializer):  # Or serializers.Seri
 
 
 class ThePredictionSerializer(serializers.ModelSerializer):
-    
+    confidence = serializers.FloatField(required=False)
+    imageId = serializers.PrimaryKeyRelatedField(queryset=UploadImage.objects.all())
+
     class Meta:
         model = saveThePrediction
-        fields = '__all__' 
+        fields = ('imageId', 'prediction', 'confidence', 'created_at')  # Correct: Tuple of field names
 

@@ -1,3 +1,4 @@
+import json
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -69,30 +70,42 @@ def GetUploadedImageById(request, pk):
 @api_view(['POST'])
 def SavePrediction(request):
     try:
-        data = request.data  # Data is already parsed by JSONParser
-        print(data)
+        data = request.data
+        print("Received data:", data)  # Debug print
 
-        # Check if imageId exists and is valid
         if 'imageId' not in data:
             return Response({'error': 'imageId is required'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            upload_image = UploadImage.objects.get(pk=data['imageId'])
+            image_id = int(data['imageId'])  # Convert to integer immediately
+            upload_image = UploadImage.objects.get(pk=image_id)
+        except (ValueError, TypeError):
+            return Response({'error': 'Invalid imageId (must be an integer)'}, status=status.HTTP_400_BAD_REQUEST)
         except UploadImage.DoesNotExist:
             return Response({'error': 'Invalid imageId'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Modify data to include the UploadImage instance
-        data['imageId'] = upload_image
+
+        image_path = upload_image.image.path  # Get path AFTER checking ID
+
+        prediction_result = classifier.predict(image_path)
+
+        if prediction_result == "Error":
+            return Response({'error': 'Prediction failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        data['prediction'] = prediction_result
+        # Important: Pass the ID, not the instance
+        data['imageId'] = upload_image.id  # Use upload_image.id
 
         serializer = ThePredictionSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print(serializer.errors)  # Print errors for debugging
+            print("Serializer errors:", serializer.errors)  # Print serializer errors
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except json.JSONDecodeError:
         return Response({'error': 'Invalid JSON data'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        print(e)  # Print errors for debugging
+        print(f"An error occurred: {e}")
         return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
