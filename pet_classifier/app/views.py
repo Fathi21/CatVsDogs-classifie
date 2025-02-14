@@ -16,11 +16,12 @@ classifier = CatDogClassifier(model_path)
 def UploadUpImage(request):
     # Validate the uploaded file
     serializer = ImageUploadSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    print(serializer.is_valid())
+    if serializer.is_valid():
+        serializer.save()  # <--- THIS IS THE KEY: Save the serializer!
+        return Response({'message': 'Image uploaded successfully', 'image_url': serializer.data['image']}, status=status.HTTP_201_CREATED) # 201 Created is better
 
-
-    return Response(serializer.errors, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
         # # Save the uploaded image

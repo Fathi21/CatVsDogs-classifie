@@ -26,8 +26,11 @@ SECRET_KEY = "django-insecure-wh-49%8z%lr!_c26y35d%m=uj!!#^f(82t4)#q0d$wc9u84799
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost',  # For local development
+    '127.0.0.1', # For local development
+    'http://localhost:3000/',  # Your actual domain name
+]
 
 # Application definition
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'rest_framework',
+    'corsheaders',
     'app',  # Add your app here
 
 ]
@@ -52,6 +56,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "pet_classifier.urls"
@@ -134,5 +140,12 @@ REST_FRAMEWORK = {
     # other DRF settings...
 }
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Your React app's origin
+    # "https://your-production-domain.com",  # Add your production domain(s)
+]
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store uploaded files
 MEDIA_URL = '/media/'
+
+CORS_ALLOW_CREDENTIALS = True
