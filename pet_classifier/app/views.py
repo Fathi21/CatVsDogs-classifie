@@ -58,10 +58,10 @@ def GetUploadedImageById(request, pk):
     
     if request.method == 'GET':
         # Get the data from the database.
-        images = UploadImage.objects.filter(id=pk)
-    
+        image = UploadImage.objects.filter(id=pk)
+        
         # Serialize the data.
-        serializer = ImageUploadSerializer(images, many=True)
+        serializer = ImageUploadSerializer(image, many=True)
 
         # Return the data.
         return Response(serializer.data)
