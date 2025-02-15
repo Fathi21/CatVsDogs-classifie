@@ -12,7 +12,7 @@ import numpy as np
 ##os.chdir("Models")
 # Load the model
 model_path = os.path.join(os.path.dirname(__file__), 'Model', 'cat_dog_classifier.h5')
-classifier = CatDogClassifier(model_path)
+classifier = CatDogClassifier(model_path, 0.85)
 
 @api_view(['POST'])
 def UploadUpImage(request):
@@ -85,6 +85,10 @@ def SavePrediction(request):
         except UploadImage.DoesNotExist:
             return Response({'error': 'Invalid imageId'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Check if a prediction already exists for this imageId
+        existing_prediction = saveThePrediction.objects.filter(imageId=upload_image).first()
+        if existing_prediction:
+            return Response({'error': 'Prediction already exists for this imageId'}, status=status.HTTP_400_BAD_REQUEST)
 
         image_path = upload_image.image.path  # Get path AFTER checking ID
 
