@@ -9,7 +9,7 @@ class UploadImage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.image})"
+        return f"Image name: {self.image})"
     
 
 class saveThePrediction(models.Model):
@@ -19,4 +19,4 @@ class saveThePrediction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.prediction} ({self.confidence:.2f})"
+        return f"Prediction: {self.prediction}, confidence: ({self.confidence:.2f})"
