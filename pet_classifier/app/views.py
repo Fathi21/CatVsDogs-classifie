@@ -12,7 +12,7 @@ import numpy as np
 ##os.chdir("Models")
 # Load the model
 model_path = os.path.join(os.path.dirname(__file__), 'Model', 'cat_dog_classifier.h5')
-classifier = CatDogClassifier(model_path, 0.85)
+classifier = CatDogClassifier(model_path)
 
 @api_view(['POST'])
 def UploadUpImage(request):
@@ -24,23 +24,6 @@ def UploadUpImage(request):
         return Response({'message': 'Image uploaded successfully', 'image_url': serializer.data['image']}, status=status.HTTP_201_CREATED) # 201 Created is better
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-        # # Save the uploaded image
-        # uploaded_image = serializer.validated_data['image']
-        # file_name = default_storage.save(uploaded_image.name, uploaded_image)
-        # file_path = default_storage.path(file_name)
-
-        # try:
-        #     # Make a prediction
-        #     result = classifier.predict(file_path)
-        #     response_data = {'result': result}
-        #     return Response(response_data, status=status.HTTP_200_OK)
-        # except Exception as e:
-        #     return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        # #finally:
-        #     # Delete the uploaded image after prediction
-        #     #default_storage.delete(file_name)
 
 @api_view(['GET'])
 def GetUploadedImages(request):
@@ -121,6 +104,7 @@ def getPredictions(request):
     predictions = saveThePrediction.objects.all()
     serializer = ThePredictionSerializer(predictions, many=True)
     return Response(serializer.data) 
+
 
 @api_view(['GET'])
 def getPredictionsByImageid(request, image_id):

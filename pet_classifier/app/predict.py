@@ -3,9 +3,8 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 class CatDogClassifier:
-    def __init__(self, model_path, confidence_threshold):
+    def __init__(self, model_path):
         self.model = tf.keras.models.load_model(model_path)
-        self.confidence_threshold = confidence_threshold
 
     def predict(self, img_path):
         # Load and preprocess the image
@@ -28,9 +27,6 @@ class CatDogClassifier:
         else:
             confidence = 1 - confidence 
 
-        # Apply the confidence threshold
-        if confidence < self.confidence_threshold:
-            label = "Unknown"
         # Format the confidence as a percentage
         confidence_percentage = confidence * 100
         return label, confidence_percentage
