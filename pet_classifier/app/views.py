@@ -7,6 +7,7 @@ from .predict import CatDogClassifier
 from .serializers import *
 from .models import UploadImage
 import os
+import numpy as np
 
 ##os.chdir("Models")
 # Load the model
@@ -92,8 +93,8 @@ def SavePrediction(request):
         if prediction_result == "Error":
             return Response({'error': 'Prediction failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        data['prediction'] = prediction_result
-        # Important: Pass the ID, not the instance
+        data['prediction'] = prediction_result[0]
+        data['confidence'] = prediction_result[1]
         data['imageId'] = upload_image.id  # Use upload_image.id
 
         serializer = ThePredictionSerializer(data=data)
@@ -109,3 +110,21 @@ def SavePrediction(request):
     except Exception as e:
         print(f"An error occurred: {e}")
         return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(['GET'])
+def getPredictions(request):
+    predictions = saveThePrediction.objects.all()
+    serializer = ThePredictionSerializer(predictions, many=True)
+    return Response(serializer.data) 
+
+@api_view(['GET'])
+def getPredictionsByImageid(request, image_id):
+    try:
+        predictions = saveThePrediction.objects.filter(imageId=image_id)
+        if not predictions.exists():
+            return Response({"error": "No predictions found for this imageId"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ThePredictionSerializer(predictions, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

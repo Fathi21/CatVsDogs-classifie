@@ -15,4 +15,18 @@ class CatDogClassifier:
 
         # Make a prediction
         prediction = self.model.predict(img_array)
-        return "Dog" if prediction[0][0] > 0.5 else "Cat"
+        confidence = prediction[0][0]
+
+        if confidence > 0.5:
+            label = "Dog"
+        else:
+            label = "Cat"
+
+        if confidence > 0.5:
+            confidence = confidence
+        else:
+            confidence = 1 - confidence   
+                 
+        # Format the confidence as a percentage
+        confidence_percentage = confidence * 100
+        return label, confidence_percentage
