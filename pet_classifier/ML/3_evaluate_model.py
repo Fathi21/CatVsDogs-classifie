@@ -1,11 +1,10 @@
-import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report, confusion_matrix
+import os
 
+# Define the path to the directory containing the model
+directory_path = './CatVsDogs-classifie/pet_classifier/app/Model/cat_dog_classifier.h5'
 
-# Load the model
-model_path = './pet_classifier/app/Model/cat_dog_classifier.h5'
-model = tf.keras.models.load_model(model_path)
+# List the contents of the directory
+
+files = os.listdir(directory_path)
+print(f"Files in '{files}':")
 

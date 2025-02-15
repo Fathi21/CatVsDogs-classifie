@@ -11,7 +11,7 @@ import numpy as np
 
 ##os.chdir("Models")
 # Load the model
-model_path = os.path.join(os.path.dirname(__file__), 'Model', 'cat_dog_classifier.h5')
+model_path = '/workspaces/CatVsDogs-classifie/pet_classifier/ML/Model/cat_dog_classifier.h5'
 classifier = CatDogClassifier(model_path)
 
 @api_view(['POST'])
