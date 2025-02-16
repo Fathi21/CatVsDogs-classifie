@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Define the relative path to the model (more robust)
-model_dir = os.path.join(os.path.dirname(__file__), 'Model')  # Directory containing the model
-model_path = os.path.join(model_dir, 'cat_dog_classifier.h5')
+model_dir = os.path.join(os.path.dirname(__file__), 'ML')  # Directory containing the model
+model_path = os.path.join(model_dir, '2cat_dog_classifier.h5')
 
 # Check if the model directory and file exists
 if os.path.exists(model_dir) and os.path.exists(model_path):
