@@ -84,7 +84,7 @@ def train_model(model, train_generator, val_generator):
 
 # Step 4: Save the Model
 def save_model(model):
-    model.save('ML/cat_dog_classifier.h5')
+    model.save('ML/2cat_dog_classifier.h5')
     print("Model saved as 'ML/cat_dog_classifier.h5'")
 
 # Step 5: Plot Training Results

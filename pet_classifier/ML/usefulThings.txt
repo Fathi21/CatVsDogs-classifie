@@ -19,7 +19,7 @@ import shutil
 import os
 
 # Download the dataset to the default location
-path = kagglehub.dataset_download("tongpython/cat-and-dog")
+path = kagglehub.dataset_download("karakaggle/kaggle-cat-vs-dog-dataset")
 
 print("Path to dataset files:", path)
 
@@ -33,3 +33,9 @@ for file_name in os.listdir(path):
     shutil.move(os.path.join(path, file_name), target_folder)
 
 print("Dataset files moved to:", target_folder)
+
+https://www.kaggle.com/datasets/karakaggle/kaggle-cat-vs-dog-dataset
+https://www.kaggle.com/datasets/anthonytherrien/dog-vs-cat
+https://www.kaggle.com/datasets/alvarole/asirra-cats-vs-dogs-object-detection-dataset
+https://www.kaggle.com/datasets/sunilthite/cat-or-dog-image-classification
+https://www.kaggle.com/datasets/kunalgupta2616/dog-vs-cat-images-data
