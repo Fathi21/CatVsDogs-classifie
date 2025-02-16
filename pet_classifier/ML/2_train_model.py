@@ -54,18 +54,18 @@ def prepare_data():
 
     # Load data from directories
     train_generator = train_datagen.flow_from_directory(
-        'pet_classifier/ML/dataset/train',  # Updated path
+        '/workspaces/CatVsDogs-classifie/pet_classifier/ML/dataset/train',  # Absolute path
         target_size=INPUT_SHAPE[:2],  # Use smaller image size
         batch_size=BATCH_SIZE,
         class_mode='binary'
-    )#.repeat()  # Add .repeat()
+    )
 
     val_generator = val_datagen.flow_from_directory(
-        'pet_classifier/ML/dataset/validation',  # Updated path
+        '/workspaces/CatVsDogs-classifie/pet_classifier/ML/dataset/validation',  # Absolute path
         target_size=INPUT_SHAPE[:2],  # Use smaller image size
         batch_size=BATCH_SIZE,
         class_mode='binary'
-    ) #.repeat()  # Add .repeat()
+    )
 
     return train_generator, val_generator
 
@@ -84,7 +84,7 @@ def train_model(model, train_generator, val_generator):
 
 # Step 4: Save the Model
 def save_model(model):
-    model.save('model/cat_dog_classifier.h5')
+    model.save('ML/cat_dog_classifier.h5')
     print("Model saved as 'ML/cat_dog_classifier.h5'")
 
 # Step 5: Plot Training Results

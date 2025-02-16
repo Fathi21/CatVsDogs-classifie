@@ -11,7 +11,7 @@ from PIL import Image
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-os.chdir("pet_classifier/ML")
+#os.chdir("pet_classifier/ML")
 
 # Constants
 INPUT_FOLDER = os.path.join("PetImages")  # Folder containing cat/dog subfolders
