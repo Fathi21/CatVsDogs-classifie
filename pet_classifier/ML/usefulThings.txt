@@ -1,0 +1,35 @@
+from trained model:
+
+Confusion Matrix:
+[[1466  409]
+ [ 456 1419]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+         Cat       0.76      0.78      0.77      1875
+         Dog       0.78      0.76      0.77      1875
+
+    accuracy                           0.77      3750
+   macro avg       0.77      0.77      0.77      3750
+weighted avg       0.77      0.77      0.77      3750
+
+import kagglehub
+import shutil
+import os
+
+# Download the dataset to the default location
+path = kagglehub.dataset_download("tongpython/cat-and-dog")
+
+print("Path to dataset files:", path)
+
+# Ensure the target folder exists
+target_folder = "/workspaces/CatVsDogs-classifie/pet_classifier/ML"
+if not os.path.exists(target_folder):
+    os.makedirs(target_folder)
+
+# Move the dataset files to the target folder
+for file_name in os.listdir(path):
+    shutil.move(os.path.join(path, file_name), target_folder)
+
+print("Dataset files moved to:", target_folder)
