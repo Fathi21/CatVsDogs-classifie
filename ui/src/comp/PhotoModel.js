@@ -5,6 +5,8 @@ function PhotoModel(props) {
   const [imageData, setImageData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [predicting, setPredicting] = useState(false);
+  const [predictionResult, setPredictionResult] = useState(null);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -16,9 +18,7 @@ function PhotoModel(props) {
           "http://127.0.0.1:8000/Api/GetUploadedImageById/" + props.imageId
         );
 
-        console.log("API Response:", response); // Log the full response
-
-        setImageData(response.data[0]); // Access the first element of the array
+        setImageData(response.data[0]);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching image:", err);
@@ -34,6 +34,26 @@ function PhotoModel(props) {
     }
   }, [props.imageId]);
 
+  const handlePrediction = async () => {
+    setPredicting(true);
+    setError(null);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/Api/SaveThePrediction",
+        {
+          imageId: props.imageId, // Use imageId directly
+        }
+      );
+      console.log("Prediction Response:", response.data);
+      setPredictionResult(response.data);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error during prediction:", err);
+    } finally {
+      setPredicting(false);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -42,23 +62,26 @@ function PhotoModel(props) {
     return <div>Error: {error}</div>;
   }
 
-  console.log("data:", imageData ? imageData.image : null); // Log the full response
-
   const card = imageData ? (
     <div className="card">
       <img
-        src={`http://127.0.0.1:8000${imageData.image}`} // Construct image URL
+        src={`http://127.0.0.1:8000${imageData.image}`}
         className="card-img-top"
-        alt={`Image ${imageData.id}`} // Use a dynamic alt attribute
+        alt={`Image ${imageData.id}`}
         style={{ objectFit: "cover", height: "200px" }}
       />
       <div className="card-body">
         <h5 className="card-title">ImageID {imageData.id}</h5>
-        {/* Dynamic title */}
         <p className="card-text">
           Uploaded at: {new Date(imageData.created_at).toLocaleString()}
-          {/* Format date */}
         </p>
+        {predictionResult && (
+          <div className="prediction-result-box">
+            <pre>
+              <code>{JSON.stringify(predictionResult, null, 2)}</code>
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   ) : null;
@@ -69,11 +92,11 @@ function PhotoModel(props) {
       id="staticBackdrop"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
-      tabindex="-1"
+      tabIndex="-1"
       aria-labelledby="staticBackdropLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="staticBackdropLabel">
@@ -95,8 +118,13 @@ function PhotoModel(props) {
             >
               Close
             </button>
-            <button type="button" className="btn btn-primary">
-              Understood
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handlePrediction}
+              disabled={predicting}
+            >
+              {predicting ? "Predicting..." : "Get Prediction"}
             </button>
           </div>
         </div>

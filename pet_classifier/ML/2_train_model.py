@@ -54,14 +54,14 @@ def prepare_data():
 
     # Load data from directories
     train_generator = train_datagen.flow_from_directory(
-        '/workspaces/CatVsDogs-classifie/pet_classifier/ML/dataset/train',  # Absolute path
+        '/Users/sharif/Desktop/projects/CatVsDogs-classifie/pet_classifier/ML/dataset/Train',  # Absolute path
         target_size=INPUT_SHAPE[:2],  # Use smaller image size
         batch_size=BATCH_SIZE,
         class_mode='binary'
     )
 
     val_generator = val_datagen.flow_from_directory(
-        '/workspaces/CatVsDogs-classifie/pet_classifier/ML/dataset/validation',  # Absolute path
+        '/Users/sharif/Desktop/projects/CatVsDogs-classifie/pet_classifier/ML/dataset/Validation',  # Absolute path
         target_size=INPUT_SHAPE[:2],  # Use smaller image size
         batch_size=BATCH_SIZE,
         class_mode='binary'
