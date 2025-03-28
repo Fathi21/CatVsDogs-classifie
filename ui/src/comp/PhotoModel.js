@@ -77,9 +77,13 @@ function PhotoModel(props) {
         </p>
         {predictionResult && (
           <div className="prediction-result-box">
-            <pre>
-              <code>{JSON.stringify(predictionResult, null, 2)}</code>
-            </pre>
+            <p>
+              <strong>Prediction:</strong> {predictionResult.prediction}
+            </p>
+            <p>
+              <strong>Confidence:</strong>{" "}
+              {predictionResult.confidence.toFixed(2)}%
+            </p>
           </div>
         )}
       </div>
