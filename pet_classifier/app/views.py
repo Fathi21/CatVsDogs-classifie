@@ -11,7 +11,7 @@ import numpy as np
 
 ##os.chdir("Models")
 # Load the model
-model_path = '/workspaces/CatVsDogs-classifie/pet_classifier/ML/Model/cat_dog_classifier.h5'
+model_path = '/Users/sharif/Desktop/projects/CatVsDogs-classifie/pet_classifier/ML/ML/cat_dog_classifier_v.h5'
 classifier = CatDogClassifier(model_path)
 
 @api_view(['POST'])
@@ -71,7 +71,8 @@ def SavePrediction(request):
         # Check if a prediction already exists for this imageId
         existing_prediction = saveThePrediction.objects.filter(imageId=upload_image).first()
         if existing_prediction:
-            return Response({'error': 'Prediction already exists for this imageId'}, status=status.HTTP_400_BAD_REQUEST)
+            serializer_existing_prediction = ThePredictionSerializer(existing_prediction)
+            return Response(serializer_existing_prediction.data, status=status.HTTP_200_OK)
 
         image_path = upload_image.image.path  # Get path AFTER checking ID
 
@@ -97,7 +98,6 @@ def SavePrediction(request):
     except Exception as e:
         print(f"An error occurred: {e}")
         return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
 
 @api_view(['GET'])
 def getPredictions(request):

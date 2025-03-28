@@ -1,83 +1,51 @@
-# Need to read the PetImage folder 
-# check if any bad images in the folder "PetImage"  
-# sprate the data into:
-# training data 
-# test data 
-# validation data 
-
 import os
-import shutil
-from PIL import Image
-import numpy as np
-from sklearn.model_selection import train_test_split
 
-os.chdir("pet_classifier/ML")
-
-# Constants
-INPUT_FOLDER = os.path.join("PetImages")  # Folder containing cat/dog subfolders
-OUTPUT_FOLDER = os.path.join("dataset")  # Output folder inside existing ML folder
-TRAIN_RATIO = 0.7           # 70% training data
-VAL_RATIO = 0.15            # 15% validation data
-TEST_RATIO = 0.15           # 15% test data
-SEED = 42                   # For reproducibility
-
-# Create output folders
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Train/cats"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Train/dogs"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Validation/cats"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Validation/dogs"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Test/cats"), exist_ok=True)
-os.makedirs(os.path.join(OUTPUT_FOLDER, "Test/dogs"), exist_ok=True)
-
-def clean_corrupt_files(folder_path):
+def count_images_in_subfolders(folder_path):
     """
-    Remove corrupt or non-image files from a folder.
+    Counts the number of image files (jpg, jpeg, png, gif, bmp) 
+    in the "cats" and "dogs" subfolders of a given folder.
+
+    Args:
+        folder_path: The path to the main folder containing "cats" and "dogs" subfolders.
+
+    Returns:
+        A dictionary containing the counts for "cats" and "dogs", or 
+        a string message if there's an issue with the folder structure.
+        Returns an empty dictionary if no images are found.
     """
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            try:
-                # Open and verify the image
-                with Image.open(file_path) as img:
-                    img.verify()  # Verify integrity
-                    img = Image.open(file_path)  # Reopen to check loading
-                    img.close()
-            except (IOError, SyntaxError, Image.UnidentifiedImageError, Exception) as e:
-                print(f"Removing corrupt file: {file_path} (Error: {e})")
-                os.remove(file_path)
-def split_data(class_name):
-    """
-    Split data for a specific class (cats or dogs) into train/val/test sets.
-    """
-    # Get list of files
-    class_dir = os.path.join(INPUT_FOLDER, class_name)
-    files = [os.path.join(class_dir, f) for f in os.listdir(class_dir)]
 
-    # Split into train/val/test
-    train_files, temp_files = train_test_split(files, test_size=(1 - TRAIN_RATIO), random_state=SEED)
-    val_files, test_files = train_test_split(temp_files, test_size=TEST_RATIO/(TEST_RATIO + VAL_RATIO), random_state=SEED)
+    try:
+        cats_folder = os.path.join(folder_path, "Cat")
+        dogs_folder = os.path.join(folder_path, "Dog")
 
-    # Copy files to target folders
-    def copy_files(files, target_dir):
-        os.makedirs(target_dir, exist_ok=True)
-        for f in files:
-            shutil.copy(f, target_dir)
+        if not os.path.exists(cats_folder) or not os.path.exists(dogs_folder):
+            return "Error: 'cats' or 'dogs' subfolders not found."
 
-    copy_files(train_files, os.path.join(OUTPUT_FOLDER, "train", class_name))
-    copy_files(val_files, os.path.join(OUTPUT_FOLDER, "validation", class_name))
-    copy_files(test_files, os.path.join(OUTPUT_FOLDER, "test", class_name))
+        image_extensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]  # Add more if needed.
+        counts = {"cats": 0, "dogs": 0}
 
-def main():
-    # Step 1: Clean corrupt files in the input folder
-    print("Cleaning corrupt files...")
-    clean_corrupt_files(INPUT_FOLDER)
+        for folder_name, folder_path in [("cats", cats_folder), ("dogs", dogs_folder)]:
+            if os.path.exists(folder_path): #check if folder exists
+                for filename in os.listdir(folder_path):
+                    if any(filename.lower().endswith(ext) for ext in image_extensions):
+                        counts[folder_name] += 1
+        return counts
 
-    # Step 2: Split data for cats and dogs
-    print("Splitting data into train/val/test sets...")
-    split_data("Cat")
-    split_data("Dog")
+    except Exception as e:
+        return f"An error occurred: {e}"
 
-    print(f"Data organisation complete! Check the '{OUTPUT_FOLDER}' folder.")
 
-if __name__ == "__main__":
-    main()
+
+# Example usage:
+folder_path = "/Users/sharif/Desktop/projects/CatVsDogs-classifie/pet_classifier/ML/PetImages"  # Replace with the actual path
+image_counts = count_images_in_subfolders(folder_path)
+
+if isinstance(image_counts, dict): #check if it's a dictionary
+    if not image_counts: #check if it's an empty dictionary
+        print("No images found in the specified folders.")
+    else:
+        print("Image counts:")
+        for category, count in image_counts.items():
+            print(f"{category}: {count}")
+elif isinstance(image_counts, str): #check if it's a string (error message)
+    print(image_counts) #print the error message
